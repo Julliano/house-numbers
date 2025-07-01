@@ -3,6 +3,8 @@ import request from 'supertest';
 import dotenv from 'dotenv';
 
 import app from '../app';
+import { generateSummary } from '../services/aiService';
+import Snippet from '../models/Snippet';
 
 dotenv.config({ path: '.env.test' });
 
@@ -11,8 +13,6 @@ jest.mock('../services/aiService', () => ({
   generateSummary: jest.fn(() => Promise.resolve('mock summary'))
 }));
 
-import { generateSummary } from '../services/aiService';
-import Snippet from '../models/Snippet';
 
 beforeAll(async () => {
   await mongoose.connect(process.env.MONGO_URI!, { dbName: 'testdb' });
@@ -43,5 +43,38 @@ describe('POST /snippets', () => {
     const doc = await Snippet.findById(res.body.id);
     expect(doc).not.toBeNull();
     expect(doc!.summary).toBe('mock summary');
+  });
+});
+
+describe('GET /snippets/:id', () => {
+  it('should return snippet by id', async () => {
+    const created = await Snippet.create({ text: 'test', summary: 'sum' });
+
+    const res = await request(app).get(`/snippets/${created._id}`);
+    expect(res.statusCode).toBe(200);
+    expect(res.body.id).toBe(String(created._id));
+    expect(res.body.text).toBe('test');
+    expect(res.body.summary).toBe('sum');
+  });
+
+  it('should return 404 if snippet not found', async () => {
+    const id = new mongoose.Types.ObjectId();
+    const res = await request(app).get(`/snippets/${id}`);
+    expect(res.statusCode).toBe(404);
+    expect(res.body).toHaveProperty('error');
+  });
+});
+
+describe('GET /snippets', () => {
+  it('should return list of snippets', async () => {
+    await Snippet.create({ text: 'one', summary: 's1' });
+    await Snippet.create({ text: 'two', summary: 's2' });
+
+    const res = await request(app).get('/snippets');
+    expect(res.statusCode).toBe(200);
+    expect(res.body.length).toBe(2);
+    expect(res.body[0]).toHaveProperty('id');
+    expect(res.body[0]).toHaveProperty('text');
+    expect(res.body[0]).toHaveProperty('summary');
   });
 });
