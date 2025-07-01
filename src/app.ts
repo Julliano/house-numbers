@@ -10,3 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 export default app;
+
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
