@@ -79,3 +79,20 @@ describe('GET /snippets', () => {
     expect(res.body[0]).toHaveProperty('summary');
   });
 });
+
+describe('GET /snippets/:id error cases', () => {
+  it('should return 400 for invalid ID format', async () => {
+    const res = await request(app).get('/snippets/invalid-id');
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toHaveProperty('error');
+  });
+});
+
+describe('POST /snippets error cases', () => {
+  it('should handle AI service failure gracefully', async () => {
+    (generateSummary as jest.Mock).mockRejectedValueOnce(new Error('AI fail'));
+    const res = await request(app).post('/snippets').send({ text: 'fail me' });
+    expect(res.statusCode).toBe(500);
+    expect(res.body).toHaveProperty('error');
+  });
+});
