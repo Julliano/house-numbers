@@ -43,7 +43,7 @@ describe('POST /snippets', () => {
     
     const doc = await Snippet.findById(res.body.id);
     expect(doc).not.toBeNull();
-    expect(doc!.summary).toBe('mock summary');
+    expect(doc?.summary).toBe('mock summary');
   });
 });
 
@@ -90,7 +90,10 @@ describe('GET /snippets/:id error cases', () => {
 
 describe('POST /snippets error cases', () => {
   it('should handle AI service failure gracefully', async () => {
-    (generateSummary as jest.Mock).mockRejectedValueOnce(new Error('AI fail'));
+    const mockedGenerateSummary = generateSummary as jest.Mock;
+    mockedGenerateSummary.mockRejectedValueOnce(new Error('AI fail'));
+
+    // (generateSummary as jest.Mock).mockRejectedValueOnce(new Error('AI fail'));
     const res = await request(app).post('/snippets').send({ text: 'fail me' });
     expect(res.statusCode).toBe(500);
     expect(res.body).toHaveProperty('error');
