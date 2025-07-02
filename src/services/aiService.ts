@@ -1,7 +1,8 @@
 import axios from 'axios';
 
+const apiKey = process.env.OPENAI_API_KEY!;
+
 export async function generateSummary(text: string): Promise<string> {
-  const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) throw new Error('OPENAI_API_KEY not set');
 
   const res = await axios.post(

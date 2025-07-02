@@ -19,11 +19,10 @@ The API will run on :3000, MongoDB on :27017
 npm install
 cp .env.example .env
 # edit .env with your OpenAI API key
-docker compose up -d mongo
-npm run dev
+docker compose up --build -api
 ```
 
 ## API Endpoints
-- POST `/snippets` - Create a snippet with AI-generated summary
+- POST `/snippets` - Create / save a snippet with AI-generated summary based on the given text
 - GET `/snippets/:id` - Retrieve a single snippet by ID
-- GET `/snippets` - List all snippets
+- GET `/snippets` - Retrieve the list of all snippets
