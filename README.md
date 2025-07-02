@@ -1,10 +1,10 @@
 # AI Snippet Service
 
-A simple service to create and retrieve AI-generated summaries of text.
+A simple BE service to create and retrieve AI-generated summaries of text, using openAI, Node + express and MongoDB (using node v20.10.0).
 
 # Run with Docker:
 - To run the API via docker use -> docker compose up --build -api
-- TO run the tests via docker use -> docker compose up --build -api-test
+- To run the tests via docker use -> docker compose up --build -api-test
 The API will run on :3000, MongoDB on :27017
 
 ## Setup
