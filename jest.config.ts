@@ -5,7 +5,7 @@ const config: Config = {
   testEnvironment: 'node',
   transform: {},
   moduleFileExtensions: ['ts', 'js', 'json'],
-  testMatch: ['**/__tests__/**/*.test.ts', '**/?(*.)+(spec|test).ts'],
+  testMatch: ['**/__tests__/**/*.test.js', '**/?(*.)+(spec|test).js']
 };
 
 export default config;

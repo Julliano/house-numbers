@@ -4,9 +4,9 @@
   "main": "src/server.ts",
   "scripts": {
     "dev": "ts-node-dev src/server.ts",
-    "start": "node dist/server.js",
+    "start": "npm run build && node dist/server.js",
     "build": "tsc",
-    "test": "npm run build && jest dist"
+    "test": "rm -rf dist && npm run build && jest dist"
   },
   "dependencies": {
     "axios": "1.6.0",

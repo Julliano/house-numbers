@@ -1,17 +1,13 @@
+jest.mock('../services/aiService', () => ({
+  generateSummary: jest.fn(() => Promise.resolve('mock summary'))
+}));
+
 import mongoose from 'mongoose';
 import request from 'supertest';
-import dotenv from 'dotenv';
 
 import app from '../app';
 import { generateSummary } from '../services/aiService';
 import Snippet from '../models/Snippet';
-
-dotenv.config({ path: '.env.test' });
-
-// Mock AI service (we'll create this file soon)
-jest.mock('../services/aiService', () => ({
-  generateSummary: jest.fn(() => Promise.resolve('mock summary'))
-}));
 
 const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/ai-snippet-test';
 
@@ -93,7 +89,6 @@ describe('POST /snippets error cases', () => {
     const mockedGenerateSummary = generateSummary as jest.Mock;
     mockedGenerateSummary.mockRejectedValueOnce(new Error('AI fail'));
 
-    // (generateSummary as jest.Mock).mockRejectedValueOnce(new Error('AI fail'));
     const res = await request(app).post('/snippets').send({ text: 'fail me' });
     expect(res.statusCode).toBe(500);
     expect(res.body).toHaveProperty('error');
