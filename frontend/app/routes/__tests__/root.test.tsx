@@ -9,6 +9,6 @@ describe('Index route', () => {
         <Index />
       </MemoryRouter>
     );
-    expect(await screen.findByText(/Welcome to/i)).toBeInTheDocument();
+    expect(await screen.findByText(/AI Snippet Service/i)).toBeInTheDocument();
   });
 });
