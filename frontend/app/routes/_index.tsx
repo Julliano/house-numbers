@@ -1,4 +1,4 @@
-import { json, redirect } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
 
 export async function action({ request }: { request: Request }) {
@@ -6,7 +6,10 @@ export async function action({ request }: { request: Request }) {
   const text = formData.get("text");
 
   if (!text || typeof text !== "string" || text.trim() === "") {
-    return json({ error: "Text is required" }, { status: 400 });
+    return new Response(JSON.stringify({ error: "Text is required" }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" }
+    });
   }
 
   try {
@@ -20,14 +23,20 @@ export async function action({ request }: { request: Request }) {
 
     if (!res.ok) {
       const data = await res.json();
-      return json({ error: data.error || "API error" }, { status: res.status });
+      return new Response(JSON.stringify({ error: data.error || "API error" }), {
+        status: res.status,
+        headers: { "Content-Type": "application/json" }
+      });
     }
 
     const data = await res.json();
     return redirect(`/snippets/${data.id}`);
   } catch (err) {
     console.error(err);
-    return json({ error: "Failed to contact API" }, { status: 500 });
+    return new Response(JSON.stringify({ error: "Failed to contact API" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" }
+    });
   }
 }
 
