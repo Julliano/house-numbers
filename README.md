@@ -6,6 +6,7 @@ Built with Node.js (v20.10.0), Express, TypeScript, MongoDB, and OpenAI API.
 ## Notes
 - The OpenAI API key must be kept secret — do not commit it to source control.
 - This service assumes an AI provider (e.g. OpenAI) is available and responsive.
+- The UI and API are structured in separate folders, as per the challenge requirements. If preferred, these could easily be split into separate repositories.
 
 ---
 
@@ -34,7 +35,7 @@ This will:
 ## Environment variables
 - MONGO_URI=mongodb://mongo:27017/ai-snippet
 - OPENAI_API_KEY=your-openai-api-key
-- PORT=3000 (3000 will be the default if none is given)
+- BACKEND_PORT=3000 (3000 will be the default if none is given)
 
 OBS: Replace `OPENAI_API_KEY` value with a valid OpenAI API key
 👉 You can obtain a key at https://platform.openai.com/account/api-keys

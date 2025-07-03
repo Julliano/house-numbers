@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-dotenv.config();
+dotenv.config({ path: '../.env' });
 
 import mongoose from 'mongoose';
 import app from './app';
@@ -19,7 +19,7 @@ async function startServer() {
     console.warn('MONGO_URI not set, skipping MongoDB connection');
   }
 
-  const port = process.env.PORT || 3000;
+  const port = process.env.BACKEND_PORT || 3000;
   app.listen(port, () => {
     console.log(`Server running on port ${port}`);
   });
