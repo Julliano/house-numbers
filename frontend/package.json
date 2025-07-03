@@ -32,7 +32,7 @@
     "@typescript-eslint/parser": "6.7.4",
     "@vitejs/plugin-react": "4.6.0",
     "autoprefixer": "10.4.21",
-    "dotenv-cli": "^8.0.0",
+    "dotenv-cli": "8.0.0",
     "eslint": "8.38.0",
     "eslint-import-resolver-typescript": "3.6.1",
     "eslint-plugin-import": "2.28.1",
