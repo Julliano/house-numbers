@@ -1,5 +1,6 @@
 import { Links, Outlet, Scripts, ScrollRestoration } from "@remix-run/react";
 
+import Navbar from "./components/Navbar";
 import './tailwind.css';
 
 export default function App() {
@@ -10,6 +11,7 @@ export default function App() {
         <Links />
       </head>
       <body className="bg-gray-50 text-gray-900">
+        <Navbar />
         <Outlet />
         <ScrollRestoration />
         <Scripts />

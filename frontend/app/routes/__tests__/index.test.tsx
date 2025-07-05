@@ -9,13 +9,14 @@ vi.mock("@remix-run/react", async () => {
   return {
     ...actual,
     useActionData: vi.fn(() => undefined),
+    Form: ({ children }: { children: React.ReactNode }) => <form>{children}</form>,
   };
 });
 
 describe("IndexPage", () => {
   it("renders form", () => {
-    // render(<Index />);
-    // expect(screen.getByPlaceholderText(/enter text/i)).toBeInTheDocument();
-    // expect(screen.getByRole("button", { name: /submit/i })).toBeInTheDocument();
+    render(<Index />);
+    expect(screen.getByPlaceholderText(/enter text/i)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /submit/i })).toBeInTheDocument();
   });
 });

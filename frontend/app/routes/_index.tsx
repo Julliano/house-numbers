@@ -1,4 +1,3 @@
-import { redirect } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
 
 export async function action({ request }: { request: Request }) {
@@ -6,10 +5,7 @@ export async function action({ request }: { request: Request }) {
   const text = formData.get("text");
 
   if (!text || typeof text !== "string" || text.trim() === "") {
-    return new Response(JSON.stringify({ error: "Text is required" }), {
-      status: 400,
-      headers: { "Content-Type": "application/json" }
-    });
+    return { error: "Text is required" };
   }
 
   try {
@@ -20,23 +16,16 @@ export async function action({ request }: { request: Request }) {
       body: JSON.stringify({ text })
     });
 
-
     if (!res.ok) {
       const data = await res.json();
-      return new Response(JSON.stringify({ error: data.error || "API error" }), {
-        status: res.status,
-        headers: { "Content-Type": "application/json" }
-      });
+      return { error: data.error || "API error" };
     }
 
     const data = await res.json();
-    return redirect(`/snippets/${data.id}`);
+    return { snippet: data }; // return snippet info instead of redirect
   } catch (err) {
     console.error(err);
-    return new Response(JSON.stringify({ error: "Failed to contact API" }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" }
-    });
+    return { error: "Failed to contact API" };
   }
 }
 
@@ -54,13 +43,28 @@ export default function Index() {
           className="w-full border rounded p-2"
           placeholder="Enter text to summarize..."
         />
-        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
+        <button
+          type="submit"
+          className="bg-blue-600 text-white px-4 py-2 rounded"
+        >
           Submit
         </button>
       </Form>
 
       {actionData?.error && (
         <p className="text-red-600 mt-2">{actionData.error}</p>
+      )}
+
+      {actionData?.snippet && (
+        <div className="mt-4 p-4 border border-green-500 rounded bg-green-100 text-green-900">
+          <p>Snippet created successfully!</p>
+          <p>
+            <strong>ID:</strong> {actionData.snippet.id}
+          </p>
+          <p>
+            <strong>Summary:</strong> {actionData.snippet.summary}
+          </p>
+        </div>
       )}
     </main>
   );

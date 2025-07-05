@@ -1,29 +1,52 @@
-import { render, screen } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
-import * as remixReact from "@remix-run/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { vi } from "vitest";
+import SnippetsPage from "../snippets/index";
 
-import SnippetsPage from "../snippets";
+vi.mock("@remix-run/react", async () => {
+  const actual = await import("@remix-run/react");
+  return {
+    ...actual,
+    useLoaderData: () => ({
+      snippets: [
+        { _id: "abc123", text: "Example text", summary: "Example summary" },
+        { _id: "def456", text: "Another", summary: "Another summary" }
+      ],
+      apiUrl: "http://mockapi"
+    })
+  };
+});
 
 describe("SnippetsPage", () => {
-  it("renders table rows", () => {
-    const mockSnippets = [
-      { id: "1", text: "Sample text 1", summary: "Summary 1" },
-      { id: "2", text: "Sample text 2", summary: "Summary 2" },
-    ];
+  it("renders table with snippets", () => {
+    render(<SnippetsPage />);
+    expect(screen.getByText(/Example text/)).toBeInTheDocument();
+    expect(screen.getByText(/Another summary/)).toBeInTheDocument();
+  });
 
-    vi.spyOn(remixReact, "useLoaderData").mockReturnValue(mockSnippets);
+  it("finds snippet by id", async () => {
+    // Mock fetch for handleFind
+    global.fetch = vi.fn().mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        _id: "abc123",
+        text: "Example text",
+        summary: "Example summary"
+      })
+    });
 
-    render(
-      <MemoryRouter>
-        <SnippetsPage />
-      </MemoryRouter>
-    );
+    render(<SnippetsPage />);
 
-    // Verify table renders data
-    expect(screen.getByText("Sample text 1")).toBeInTheDocument();
-    expect(screen.getByText("Summary 1")).toBeInTheDocument();
-    expect(screen.getByText("Sample text 2")).toBeInTheDocument();
-    expect(screen.getByText("Summary 2")).toBeInTheDocument();
+    const input = screen.getByPlaceholderText(/enter snippet id/i);
+    const button = screen.getByRole("button", { name: /find/i });
+
+    fireEvent.change(input, { target: { value: "abc123" } });
+    fireEvent.click(button);
+
+    await waitFor(() => {
+      expect(screen.getByText(/Example text/)).toBeInTheDocument();
+      expect(screen.getByText(/Example summary/)).toBeInTheDocument();
+    });
+
+    expect(global.fetch).toHaveBeenCalledWith("/snippets/abc123");
   });
 });
