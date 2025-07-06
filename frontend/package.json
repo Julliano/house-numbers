@@ -7,7 +7,8 @@
     "dev": "dotenv -e ../.env -- bash -c 'remix vite:dev --port $FRONTEND_PORT'",
     "build": "dotenv -e ../.env -- remix vite:build",
     "start": "dotenv -e ../.env -- npm run build && remix-serve ./build/server/index.js --port $PORT",
-    "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "typecheck": "tsc",
     "test": "vitest",
     "test:watch": "vitest --watch"

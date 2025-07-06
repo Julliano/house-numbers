@@ -3,7 +3,7 @@ import { NavLink } from "@remix-run/react";
 export default function Navbar() {
   return (
     <nav className="bg-gray-800 p-4 text-white">
-      <ul className="flex space-x-6 max-w-4xl mx-auto">
+      <ul className="mx-auto flex max-w-4xl space-x-6">
         <li>
           <NavLink
             to="/"
